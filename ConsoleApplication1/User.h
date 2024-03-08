@@ -4,7 +4,7 @@
 class User : public IUser
 {
 public:
-	std::vector<uint16_t> GetUserNumbers() override;
+	Numbers GetUserNumbers(int userNumbersAmount) override;
 private:
 };
 
