@@ -5,6 +5,6 @@
 class UserMock : public IUser
 {
 public:
-	MOCK_METHOD(std::vector<uint16_t>, GetUserNumbers, (int userNumbersAmount), (override));
+	MOCK_METHOD(std::vector<uint16_t>, GetUserNumbers, (int userNumbersAmount, int minNuber, int maxNumber), (override));
 };
 
