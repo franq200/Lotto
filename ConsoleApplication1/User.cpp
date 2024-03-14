@@ -8,13 +8,18 @@ Numbers User::GetUserNumbers(int userNumbersAmount, int minNumber, int maxNumber
 	for (int i = 0; i < userNumbersAmount; i++)
 	{
 		std::cout << "\nPodaj " << i << " liczbe: ";
-		uint16_t number;
+		uint16_t number = 0;
 		std::cin >> number;
 		if (number < minNumber || number > maxNumber)
 		{
 			throw(std::exception("zly zakres liczb"));
 		}
-		userNumbers.push_back(number);
+		auto [randomNumIt, isDuplicate] = userNumbers.emplace(number);
+		if (isDuplicate)
+		{
+			std::cout << "liczba sie powtarza, wpisz ponownie\n";
+			i--;
+		}
 	}
 	return userNumbers;
 }

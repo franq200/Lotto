@@ -1,7 +1,7 @@
 #pragma once
-#include <vector>
+#include <set>
 
-using Numbers = std::vector<uint16_t>;
+using Numbers = std::set<uint16_t>;
 
 class IUser
 {

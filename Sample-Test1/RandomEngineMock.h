@@ -5,6 +5,6 @@
 class RandomEngineMock : public IRandomEngine
 {
 public:
-	MOCK_METHOD(std::vector<uint16_t>, GetUniqueRandomNumbers, (int amountOfRandomNumbers, int minNuber, int maxNumber), (override));
+	MOCK_METHOD(Numbers, GetUniqueRandomNumbers, (int amountOfRandomNumbers, int minNuber, int maxNumber), (override));
 };
 

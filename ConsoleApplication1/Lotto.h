@@ -1,10 +1,11 @@
 #pragma once
-#include <vector>
-#include "IRandomEngine.h"
-#include "IUser.h"
+#include <set>
 #include <memory>
 
-using Numbers = std::vector<uint16_t>;
+using Numbers = std::set<uint16_t>;
+
+class IRandomEngine;
+class IUser;
 
 struct Results
 {
