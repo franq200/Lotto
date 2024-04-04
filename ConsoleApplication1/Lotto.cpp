@@ -50,7 +50,6 @@ void Lotto::InsertRandomNumbers()
 		{
 			std::tie(randomNumIt, didSuccessfullyEmplaced) = m_randomNumbers.emplace(m_randomEngine->GetRandomNumber(1, 49));
 		} while (!didSuccessfullyEmplaced);
-
 		if (*randomNumIt < 1 || *randomNumIt > 49)
 		{
 			throw(std::exception("wylosowano liczby ze zlego zakresu"));

@@ -3,7 +3,7 @@
 #include "UserMock.h"
 #include "RandomEngineMock.h"
 
-struct LottoTestsFixture : public ::testing::Test
+class LottoTest
 {
 protected:
 	Lotto createSut()
@@ -12,6 +12,10 @@ protected:
 	}
 	std::unique_ptr<testing::NiceMock<RandomEngineMock>> randomEngineMock{ std::make_unique<testing::NiceMock<RandomEngineMock>>() };
 	std::unique_ptr<testing::NiceMock<UserMock>> userMock{ std::make_unique<testing::NiceMock<UserMock>>() };
+};
+
+struct LottoTestsFixture : public ::testing::Test, public LottoTest
+{
 };
 
 struct Parameters
@@ -21,16 +25,9 @@ struct Parameters
 	std::vector<uint16_t> correctNumbers;
 };
 
-class LottoParameterizedTestFixture : public ::testing::TestWithParam<Parameters>
+class LottoParameterizedTestFixture : public ::testing::TestWithParam<Parameters>, public LottoTest
 {
 protected:
-	Lotto createSut()
-	{
-		return Lotto(std::move(randomEngineMock), std::move(userMock));
-	}
-	std::unique_ptr<testing::NiceMock<RandomEngineMock>> randomEngineMock{ std::make_unique<testing::NiceMock<RandomEngineMock>>() };
-	std::unique_ptr<testing::NiceMock<UserMock>> userMock{ std::make_unique<testing::NiceMock<UserMock>>() };
-
 	std::vector<uint16_t> playerNumbers;
 	std::vector<uint16_t> randomNumbers;
 	std::vector<uint16_t> correctNumbers;
@@ -39,21 +36,21 @@ protected:
 TEST_P(LottoParameterizedTestFixture, GetResultTest)
 {
 	Parameters parameters = GetParam();
-
+	
 	EXPECT_CALL(*randomEngineMock, GetRandomNumber(testing::_, testing::_)).Times(6)
-		.WillOnce(testing::Return(parameters.randomNumbers[0]))
-		.WillOnce(testing::Return(parameters.randomNumbers[1]))
-		.WillOnce(testing::Return(parameters.randomNumbers[2]))
-		.WillOnce(testing::Return(parameters.randomNumbers[3]))
-		.WillOnce(testing::Return(parameters.randomNumbers[4]))
-		.WillOnce(testing::Return(parameters.randomNumbers[5]));
+		.WillOnce(testing::Return(parameters.randomNumbers.at(0)))
+		.WillOnce(testing::Return(parameters.randomNumbers.at(1)))
+		.WillOnce(testing::Return(parameters.randomNumbers.at(2)))
+		.WillOnce(testing::Return(parameters.randomNumbers.at(3)))
+		.WillOnce(testing::Return(parameters.randomNumbers.at(4)))
+		.WillOnce(testing::Return(parameters.randomNumbers.at(5)));
 	EXPECT_CALL(*userMock, GetUserNumber()).Times(6)
-		.WillOnce(testing::Return(parameters.playerNumbers[0]))
-		.WillOnce(testing::Return(parameters.playerNumbers[1]))
-		.WillOnce(testing::Return(parameters.playerNumbers[2]))
-		.WillOnce(testing::Return(parameters.playerNumbers[3]))
-		.WillOnce(testing::Return(parameters.playerNumbers[4]))
-		.WillOnce(testing::Return(parameters.playerNumbers[5]));
+		.WillOnce(testing::Return(parameters.playerNumbers.at(0)))
+		.WillOnce(testing::Return(parameters.playerNumbers.at(1)))
+		.WillOnce(testing::Return(parameters.playerNumbers.at(2)))
+		.WillOnce(testing::Return(parameters.playerNumbers.at(3)))
+		.WillOnce(testing::Return(parameters.playerNumbers.at(4)))
+		.WillOnce(testing::Return(parameters.playerNumbers.at(5)));
 
 	Lotto lotto = createSut();
 	Results result = lotto.GetResult();
@@ -74,13 +71,13 @@ INSTANTIATE_TEST_SUITE_P(LottoTest, LottoParameterizedTestFixture, ::testing::Va
 TEST_F(LottoTestsFixture, WrongRandomNumbersShouldThrowAnException)
 {
 	EXPECT_CALL(*randomEngineMock, GetRandomNumber(testing::_, testing::_)).Times(1).WillOnce(testing::Return(50));
-	EXPECT_ANY_THROW(Lotto lotto = createSut());
+	EXPECT_THROW(Lotto lotto = createSut(), std::exception);
 }
 
 TEST_F(LottoTestsFixture, WrongUserNumberShouldThrowAnException)
 {
 	EXPECT_CALL(*userMock, GetUserNumber()).Times(1).WillOnce(testing::Return(0));
-	EXPECT_ANY_THROW(Lotto lotto = createSut());
+	EXPECT_THROW(Lotto lotto = createSut(), std::exception);
 }
 
 TEST_F(LottoTestsFixture, UserAddedTheSameNumberSecondTimeAndItShouldAskHimAgain)
@@ -89,20 +86,20 @@ TEST_F(LottoTestsFixture, UserAddedTheSameNumberSecondTimeAndItShouldAskHimAgain
 	std::vector<uint16_t> randomNumbers = { 49,5,42,21,9,1 };
 
 	EXPECT_CALL(*randomEngineMock, GetRandomNumber(testing::_, testing::_)).Times(6)
-		.WillOnce(testing::Return(randomNumbers[0]))
-		.WillOnce(testing::Return(randomNumbers[1]))
-		.WillOnce(testing::Return(randomNumbers[2]))
-		.WillOnce(testing::Return(randomNumbers[3]))
-		.WillOnce(testing::Return(randomNumbers[4]))
-		.WillOnce(testing::Return(randomNumbers[5]));
+		.WillOnce(testing::Return(randomNumbers.at(0)))
+		.WillOnce(testing::Return(randomNumbers.at(1)))
+		.WillOnce(testing::Return(randomNumbers.at(2)))
+		.WillOnce(testing::Return(randomNumbers.at(3)))
+		.WillOnce(testing::Return(randomNumbers.at(4)))
+		.WillOnce(testing::Return(randomNumbers.at(5)));
 	EXPECT_CALL(*userMock, GetUserNumber()).Times(7)
-		.WillOnce(testing::Return(playerNumbers[0]))
-		.WillOnce(testing::Return(playerNumbers[1]))
-		.WillOnce(testing::Return(playerNumbers[2]))
-		.WillOnce(testing::Return(playerNumbers[3]))
-		.WillOnce(testing::Return(playerNumbers[4]))
-		.WillOnce(testing::Return(playerNumbers[5]))
-		.WillOnce(testing::Return(playerNumbers[6]));
+		.WillOnce(testing::Return(playerNumbers.at(0)))
+		.WillOnce(testing::Return(playerNumbers.at(1)))
+		.WillOnce(testing::Return(playerNumbers.at(2)))
+		.WillOnce(testing::Return(playerNumbers.at(3)))
+		.WillOnce(testing::Return(playerNumbers.at(4)))
+		.WillOnce(testing::Return(playerNumbers.at(5)))
+		.WillOnce(testing::Return(playerNumbers.at(6)));
 
 	Lotto lotto = createSut();
 }
@@ -113,20 +110,19 @@ TEST_F(LottoTestsFixture, TheSameNumberWasDrawnSecondTimeAndItShouldCallTheFunct
 	std::vector<uint16_t> randomNumbers = { 49,5,42,21,5,9,1 };
 
 	EXPECT_CALL(*randomEngineMock, GetRandomNumber(testing::_, testing::_)).Times(7)
-		.WillOnce(testing::Return(randomNumbers[0]))
-		.WillOnce(testing::Return(randomNumbers[1]))
-		.WillOnce(testing::Return(randomNumbers[2]))
-		.WillOnce(testing::Return(randomNumbers[3]))
-		.WillOnce(testing::Return(randomNumbers[4]))
-		.WillOnce(testing::Return(randomNumbers[5]))
-		.WillOnce(testing::Return(randomNumbers[6]));
-	EXPECT_CALL(*userMock, GetUserNumber()).Times(7)
-		.WillOnce(testing::Return(playerNumbers[0]))
-		.WillOnce(testing::Return(playerNumbers[1]))
-		.WillOnce(testing::Return(playerNumbers[2]))
-		.WillOnce(testing::Return(playerNumbers[3]))
-		.WillOnce(testing::Return(playerNumbers[4]))
-		.WillOnce(testing::Return(playerNumbers[5]));
-
+		.WillOnce(testing::Return(randomNumbers.at(0)))
+		.WillOnce(testing::Return(randomNumbers.at(1)))
+		.WillOnce(testing::Return(randomNumbers.at(2)))
+		.WillOnce(testing::Return(randomNumbers.at(3)))
+		.WillOnce(testing::Return(randomNumbers.at(4)))
+		.WillOnce(testing::Return(randomNumbers.at(5)))
+		.WillOnce(testing::Return(randomNumbers.at(6)));
+	EXPECT_CALL(*userMock, GetUserNumber()).Times(6)
+		.WillOnce(testing::Return(playerNumbers.at(0)))
+		.WillOnce(testing::Return(playerNumbers.at(1)))
+		.WillOnce(testing::Return(playerNumbers.at(2)))
+		.WillOnce(testing::Return(playerNumbers.at(3)))
+		.WillOnce(testing::Return(playerNumbers.at(4)))
+		.WillOnce(testing::Return(playerNumbers.at(5)));
 	Lotto lotto = createSut();
 }
