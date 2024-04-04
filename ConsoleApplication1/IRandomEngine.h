@@ -1,12 +1,10 @@
 #pragma once
 #include <set>
 
-using Numbers = std::set<uint16_t>;
-
 class IRandomEngine
 {
 public:
-	virtual Numbers GetUniqueRandomNumbers(int amountOfRandomNumbers, int minNumber, int maxNumber) = 0;
+	virtual ~IRandomEngine() = default;
+	virtual uint16_t GetRandomNumber(int min, int max) = 0;
 private:
 };
-

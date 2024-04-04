@@ -5,6 +5,6 @@
 class RandomEngineMock : public IRandomEngine
 {
 public:
-	MOCK_METHOD(Numbers, GetUniqueRandomNumbers, (int amountOfRandomNumbers, int minNuber, int maxNumber), (override));
+	MOCK_METHOD(uint16_t, GetRandomNumber, (int min, int max), (override));
 };
 

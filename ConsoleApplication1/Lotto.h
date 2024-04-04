@@ -9,7 +9,7 @@ class IUser;
 
 struct Results
 {
-	Numbers correctNumbers = {};
+	Numbers correctNumbers;
 	Numbers randomNumbers;
 	Numbers playerNumbers;
 };
@@ -20,6 +20,8 @@ public:
 	Lotto(std::unique_ptr<IRandomEngine> randomEngine, std::unique_ptr<IUser> userEngine);
 	Results GetResult();
 private:
+	void ReadUserNumbers();
+	void InsertRandomNumbers();
 	Numbers m_randomNumbers;
 	Numbers m_playerNumbers;
 	std::unique_ptr<IRandomEngine> m_randomEngine;

@@ -5,6 +5,6 @@
 class UserMock : public IUser
 {
 public:
-	MOCK_METHOD(Numbers, GetUserNumbers, (int userNumbersAmount, int minNuber, int maxNumber), (override));
+	MOCK_METHOD(uint16_t, GetUserNumber, (), (override));
 };
 

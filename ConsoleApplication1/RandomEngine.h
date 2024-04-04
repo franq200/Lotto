@@ -4,7 +4,9 @@
 class RandomEngine : public IRandomEngine
 {
 public:
-	Numbers GetUniqueRandomNumbers(int amountOfRandomNumbers, int minNuber, int maxNumber) override;
+	RandomEngine();
+	~RandomEngine() override = default;
+	uint16_t GetRandomNumber(int min, int max) override;
 private:
 };
 

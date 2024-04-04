@@ -4,7 +4,7 @@
 class User : public IUser
 {
 public:
-	Numbers GetUserNumbers(int userNumbersAmount, int minNuber, int maxNumber) override;
+	uint16_t GetUserNumber() override;
 private:
 };
 
